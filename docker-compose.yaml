@@ -1,0 +1,36 @@
+version: '3.9'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./docker/app/Dockerfile
+    container_name: cinemastore_app
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - db
+    networks:
+      - cinemastore-network
+
+  db:
+    image: mysql:8.0
+    container_name: cinemastore_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: cinemastore_db
+      MYSQL_USER: cinemastore_user
+      MYSQL_PASSWORD: cinemastore_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - cinemastore-network
+
+networks:
+  cinemastore-network:
+
+volumes:
+  mysql_data:
